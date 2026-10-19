@@ -1,24 +1,20 @@
 # Batch XLIFF Word Counter
 
-Counts translatable words in every XLIFF file in a folder and writes a client-ready Excel report.
+I made this after seeing a job that asked for word counts from 144 XLIFF files. Doing that by hand means opening each file and copying numbers into a sheet. This script does the whole folder in one go and writes an Excel report.
+
+[Watch the 38-second demo video](docs/demo.mp4)
 
 ![Results](docs/step4_results.png)
 
-[▶ Watch the 38-second demo video](docs/demo.mp4)
+## What it does
 
-## Problem
-Translation agencies and freelancers quote and invoice by word count. When a project has dozens of `.xlf` files, opening each one in a CAT tool and copying the numbers into a spreadsheet takes hours and invites mistakes.
+It reads XLIFF 1.2 and 2.x files (`.xliff`, `.xlf`, `.sdlxliff`, `.mqxliff`). It skips inline tags like `<ph>` and `<x/>`, so only real text gets counted. By default it counts the source text, and `--target` makes it count the translations instead. Chinese and Japanese don't use spaces, so it counts one word per character for those. If a file can't be read, the report says so on that file's row. It doesn't skip it silently.
 
-## Solution
-`xliff_wordcount.py` scans a folder (optionally recursively) and:
-- Reads XLIFF 1.2 (`<trans-unit><source>`) and XLIFF 2.x (`<unit><segment><source>`), including `.xliff .xlf .sdlxliff .mqxliff`
-- Ignores inline code tags (`<ph>`, `<bpt>`, `<ept>`, `<it>`, `<x/>`), so only translatable text is counted
-- Counts source text by default, or target text with `--target`
-- Counts CJK characters (Chinese/Japanese) as one word each
-- Writes an Excel file with S.No, File Name, Word Count, Segments, Notes and a TOTAL row; unreadable files are reported, not skipped silently
+The Excel report has a serial number, file name, word count, segments and notes for each file, with a TOTAL row at the bottom.
 
-## Results (real run)
-Run with `--target` on the 8 real Symfony Validator translation files:
+## What happened when I tested it
+
+I ran it with `--target` on 8 real translation files from the Symfony framework.
 
 | File | Language | Words |
 |---|---|---|
@@ -29,23 +25,32 @@ Run with `--target` on the 8 real Symfony Validator translation files:
 | validators.fr.xlf | French | 1,456 |
 | validators.ja.xlf | Japanese | 2,708 |
 | validators.ru.xlf | Russian | 1,139 |
-| validators.zh_CN.xlf | Chinese (Simpl.) | 1,598 |
-| **Total** | | **12,313 words, 1,104 segments, 0 errors** |
+| validators.zh_CN.xlf | Chinese (Simplified) | 1,598 |
+| Total | | 12,313 |
 
-## Quick start
+That's 1,104 segments in total, with 0 errors. I haven't compared these counts against a CAT tool like MateCat or Trados yet. Those tools treat numbers and repeated segments a bit differently, so their counts can differ.
+
+## Try it
+
 ```bash
 pip install -r requirements.txt
-python scripts/download_data.py                       # optional: fetch the 8 demo files into data/
+python scripts/download_data.py        # downloads the 8 test files into data/
 python xliff_wordcount.py data --target -o word_counts.xlsx
 ```
-Options: `--target` (count target instead of source), `--recursive`, `-o` output path.
+
+The options are `--target`, `--recursive` and `-o` for the output file.
 
 ## Screenshots
+
 | | |
 |---|---|
 | ![Input](docs/step1_input.png) | ![Run](docs/step2_run.png) |
 | ![Output](docs/step3_output.png) | ![Results](docs/step4_results.png) |
 
-## Data source & licence
-- Demo data: Symfony Validator translations, https://github.com/symfony/symfony (branch 7.3, `src/Symfony/Component/Validator/Resources/translations/`), **MIT licence**, © Fabien Potencier. Not committed here; `scripts/download_data.py` fetches them.
-- Code: MIT licence, see [LICENSE](LICENSE).
+## Data and licence
+
+The test files are the Symfony Validator translations from https://github.com/symfony/symfony (branch 7.3, `src/Symfony/Component/Validator/Resources/translations/`), MIT licence, © Fabien Potencier. I didn't commit them here. The download script fetches them.
+
+The code is MIT licensed. See [LICENSE](LICENSE).
+
+Made by Shannu, an engineering student who is new to freelancing.
