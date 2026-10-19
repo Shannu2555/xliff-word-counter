@@ -4,6 +4,8 @@ Counts translatable words in every XLIFF file in a folder and writes a client-re
 
 ![Results](docs/step4_results.png)
 
+[▶ Watch the 38-second demo video](docs/demo.mp4)
+
 ## Problem
 Translation agencies and freelancers quote and invoice by word count. When a project has dozens of `.xlf` files, opening each one in a CAT tool and copying the numbers into a spreadsheet takes hours and invites mistakes.
 
