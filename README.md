@@ -53,4 +53,4 @@ The test files are the Symfony Validator translations from https://github.com/sy
 
 The code is MIT licensed. See [LICENSE](LICENSE).
 
-Made by Shannu, an engineering student who is new to freelancing.
+Made by Shanmukh Narayana Chaganti, an engineering student who is new to freelancing.
